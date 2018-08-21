@@ -16,6 +16,8 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -41,13 +43,16 @@ public class RegisterActivity extends AppCompatActivity
     private TextInputLayout mTextInputLayoutPassword;
     private TextInputLayout mTextInputLayoutConfirmPassword;
     private TextInputLayout mTextInputLayoutSecurityHint;
+    private TextInputLayout mTILContact;
 
     private TextInputEditText mTextInputEditTextName;
     private TextInputEditText mTextInputEditTextEmail;
     private TextInputEditText mTextInputEditTextPassword;
     private TextInputEditText mTextInputEditTextConfirmPassword;
     private TextInputEditText mTextInputEditTextSecurityHint;
+    private TextInputEditText mTIEContact;
 
+    private RadioGroup mGenderRG;
     private AppCompatButton mAppCompatButtonRegister;
     private AppCompatTextView mAppCompatTextViewLoginLink;
 
@@ -79,13 +84,16 @@ public class RegisterActivity extends AppCompatActivity
         mTextInputLayoutPassword = findViewById(R.id.textInputLayoutPassword);
         mTextInputLayoutConfirmPassword = findViewById(R.id.textInputLayoutConfirmPassword);
         mTextInputLayoutSecurityHint = findViewById(R.id.til_security_hint);
+        mTILContact = findViewById(R.id.textInputLayoutContact);
 
         mTextInputEditTextName = findViewById(R.id.textInputEditTextName);
         mTextInputEditTextEmail = findViewById(R.id.textInputEditTextEmail);
         mTextInputEditTextPassword = findViewById(R.id.textInputEditTextPassword);
         mTextInputEditTextConfirmPassword = findViewById(R.id.textInputEditTextConfirmPassword);
         mTextInputEditTextSecurityHint = findViewById(R.id.tie_security_hint);
+        mTIEContact = findViewById(R.id.textInputEditTextContact);
 
+        mGenderRG = findViewById(R.id.gender_rg);
         mAppCompatButtonRegister = findViewById(R.id.appCompatButtonRegister);
 
         mAppCompatTextViewLoginLink = findViewById(R.id.appCompatTextViewLoginLink);
@@ -158,9 +166,26 @@ public class RegisterActivity extends AppCompatActivity
                 mTextInputLayoutConfirmPassword, getString(R.string.error_password_match))) {
             return;
         }
-
         if (!mInputValidation.isInputEditTextFilled(mTextInputEditTextSecurityHint
                 , mTextInputLayoutSecurityHint, getString(R.string.error_message_security_hint))) {
+            return;
+        }
+
+        if (!mInputValidation.isInputEditTextFilled(mTIEContact
+                , mTILContact, getString(R.string.error_message_contact))) {
+            return;
+        }
+        if (!mInputValidation.isContactValid(mTIEContact.getText().toString().trim())){
+            mTILContact.setError("Please Enter Valid contact number");
+            return;
+        }
+        if (mBitMap == null){
+            Toast.makeText(this, "Please Select Image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (mGenderRG.getCheckedRadioButtonId() == -1){
+            Toast.makeText(this, "Please Select Gender", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -171,6 +196,15 @@ public class RegisterActivity extends AppCompatActivity
             mUser.setSecurityHint(mTextInputEditTextSecurityHint.getText().toString());
             mUser.setIsAdmin(false);
             mUser.setProfileImage(mBitMap);
+            mUser.setContact(mTIEContact.getText().toString().trim());
+            mUser.setIsApproved(0);
+            int id = mGenderRG.getCheckedRadioButtonId();
+            if (id == R.id.gender_male){
+                mUser.setGender("Male");
+            } else {
+                mUser.setGender("Female");
+            }
+
             mDatabaseHelper.addUser(mUser);
 
             // Snack Bar to show success message that record saved successfully

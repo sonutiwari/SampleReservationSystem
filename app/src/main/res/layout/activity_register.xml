@@ -71,11 +71,55 @@
                 android:textColor="@android:color/white" />
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_15"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/gender_rg"
+                android:padding="@dimen/margin_5">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gender_male"
+                    android:textSize="@dimen/text_size_24"
+                    android:id="@+id/gender_male"/>
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gender_female"
+                    android:textSize="@dimen/text_size_24"
+                    android:id="@+id/gender_female"/>
+            </RadioGroup>
+        </android.support.v7.widget.LinearLayoutCompat>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayoutContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/textInputEditTextContact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_contact_number"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:textColor="@android:color/white" />
+        </android.support.design.widget.TextInputLayout>
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayoutPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_20">
+            android:layout_marginTop="@dimen/margin_10">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/textInputEditTextPassword"

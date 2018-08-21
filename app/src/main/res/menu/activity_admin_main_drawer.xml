@@ -5,13 +5,21 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_new_booking"
-            android:icon="@drawable/ic_book"
-            android:title="@string/new_booking" />
+            android:id="@+id/nav_approve_new_users"
+            android:icon="@drawable/ic_new"
+            android:title="@string/approve_new_users" />
         <item
-            android:id="@+id/nav_booking_history"
-            android:icon="@drawable/ic_history"
-            android:title="@string/booking_history" />
+            android:id="@+id/nav_trains_menu"
+            android:icon="@drawable/ic_playlist_add"
+            android:title="@string/add_update_delete_trains" />
+        <item
+            android:id="@+id/nav_block_users"
+            android:icon="@drawable/ic_block"
+            android:title="@string/block_users" />
+        <item
+            android:id="@+id/nav_update_pnr_requests"
+            android:icon="@drawable/ic_update"
+            android:title="@string/update_pnr_requests" />
     </group>
 
     <item android:title="@string/profile_action">

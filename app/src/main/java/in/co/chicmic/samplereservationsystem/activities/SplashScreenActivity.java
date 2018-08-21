@@ -14,6 +14,7 @@ import in.co.chicmic.samplereservationsystem.utilities.AppConstants;
 
 public class SplashScreenActivity extends AppCompatActivity {
     SessionManager mSession;
+    boolean mIsAdmin;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,18 +22,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         // Session class instance
         mSession = new SessionManager(getApplicationContext());
-
         mSession.checkLogin();
-
         // get user data from session
         HashMap<String, String> user = mSession.getUserDetails();
-
-        // name
-        String name = user.get(SessionManager.KEY_NAME);
-
-        // email
-        String email = user.get(SessionManager.KEY_EMAIL);
-
+        String s = user.get(SessionManager.KEY_IS_ADMIN);
+        mIsAdmin = s.equals(AppConstants.sADMIN_STRING);
         /* New Handler to start the Menu-Activity
          * and close this Splash-Screen after some seconds.*/
         new Handler().postDelayed(new Runnable(){
@@ -40,9 +34,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
                 if (mSession.isLoggedIn()){
-                    Intent mainIntent =
-                            new Intent(SplashScreenActivity.this,UsersMainActivity.class);
-                    SplashScreenActivity.this.startActivity(mainIntent);
+                    startAppropriateActivities();
                 }else{
                     Intent mainIntent =
                             new Intent(SplashScreenActivity.this,LoginActivity.class);
@@ -51,5 +43,19 @@ public class SplashScreenActivity extends AppCompatActivity {
                 SplashScreenActivity.this.finish();
             }
         }, AppConstants.sSPLASH_SCREEN_DELAY);
+    }
+
+    private void startAppropriateActivities() {
+        if (mIsAdmin){
+            Intent mainIntent =
+                    new Intent(SplashScreenActivity.this
+                            ,AdminMainActivity.class);
+            SplashScreenActivity.this.startActivity(mainIntent);
+        } else {
+            Intent mainIntent =
+                    new Intent(SplashScreenActivity.this
+                            ,UsersMainActivity.class);
+            SplashScreenActivity.this.startActivity(mainIntent);
+        }
     }
 }

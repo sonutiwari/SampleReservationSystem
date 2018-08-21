@@ -11,6 +11,9 @@ public class User {
     private String mSecurityHint;
     private boolean mIsAdmin;
     private Bitmap mProfileImage;
+    private String mContact;
+    private String mGender;
+    private int mIsApproved; // 0 = not approved, 1 = approved, 2 = blocked;
 
     public int getId() {
         return mId;
@@ -66,5 +69,29 @@ public class User {
 
     public void setProfileImage(Bitmap mProfileImage) {
         this.mProfileImage = mProfileImage;
+    }
+
+    public String getContact() {
+        return mContact;
+    }
+
+    public void setContact(String mContact) {
+        this.mContact = mContact;
+    }
+
+    public String getGender() {
+        return mGender;
+    }
+
+    public void setGender(String mGender) {
+        this.mGender = mGender;
+    }
+
+    public int getIsApproved() {
+        return mIsApproved;
+    }
+
+    public void setIsApproved(int mIsApproved) {
+        this.mIsApproved = mIsApproved;
     }
 }

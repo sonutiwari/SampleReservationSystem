@@ -7,6 +7,7 @@ import in.co.chicmic.samplereservationsystem.R;
 import in.co.chicmic.samplereservationsystem.adapters.UsersRecyclerAdapter;
 import in.co.chicmic.samplereservationsystem.dataModels.User;
 import in.co.chicmic.samplereservationsystem.database.DataBaseHelper;
+import in.co.chicmic.samplereservationsystem.utilities.AppConstants;
 
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
@@ -58,7 +59,7 @@ public class UsersListActivity extends AppCompatActivity {
         recyclerViewUsers.setAdapter(usersRecyclerAdapter);
         databaseHelper = new DataBaseHelper(activity);
 
-        String emailFromIntent = getIntent().getStringExtra("EMAIL");
+        String emailFromIntent = getIntent().getStringExtra(AppConstants.sEMAIL);
         textViewName.setText(emailFromIntent);
 
         getDataFromSQLite();

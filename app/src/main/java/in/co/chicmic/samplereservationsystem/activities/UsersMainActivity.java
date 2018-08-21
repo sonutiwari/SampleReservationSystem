@@ -58,7 +58,7 @@ public class UsersMainActivity extends AppCompatActivity
        User user = mDataBaseHelper.getUserDetails(mSessionManager
                                .getUserDetails().get(SessionManager.KEY_EMAIL).trim());
        mUserEmailTV.setText(user.getEmail());
-       mUserNameTV.setText(user.getName());
+       mUserNameTV.setText(user.getName() + "       " + user.getGender());
        mProfileImageView.setImageBitmap(user.getProfileImage());
     }
 
@@ -127,18 +127,14 @@ public class UsersMainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_new_booking) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_booking_history) {
 
-        } else if (id == R.id.nav_manage) {
+        }  else if (id == R.id.nav_edit_profile) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_logout) {
+            mSessionManager.logoutUser();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

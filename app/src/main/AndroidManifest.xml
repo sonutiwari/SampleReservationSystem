@@ -37,8 +37,13 @@
         </activity>
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.UsersListActivity" />
-        <activity android:name=".activities.UsersMainActivity"
-            android:theme="@style/SplashTheme"/>
+        <activity
+            android:name=".activities.UsersMainActivity"
+            android:theme="@style/SplashTheme" />
+        <activity
+            android:name=".activities.AdminMainActivity"
+            android:label="@string/title_activity_admin_main"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

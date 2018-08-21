@@ -10,4 +10,8 @@ public class AppConstants {
 
     // Strings
     public static final String sIMAGE_SELECT_OR_CLICK = "select_or_click";
+    public static final String sADMIN_STRING = "admin";
+    public static final String sNON_ADMIN_STRING = "non_admin";
+    public static final String sEMAIL = "EMAIL";
+    public static final String sAPPROVE_USER_FRAGMENT = "approve_user_fragment";
 }

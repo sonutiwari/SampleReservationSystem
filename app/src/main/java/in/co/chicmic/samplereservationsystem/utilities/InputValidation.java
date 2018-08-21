@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class InputValidation {
     private Context context;
@@ -95,5 +99,10 @@ public class InputValidation {
                 (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken()
                 , WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    public boolean isContactValid(String s)
+    {
+        return Patterns.PHONE.matcher(s).matches();
     }
 }

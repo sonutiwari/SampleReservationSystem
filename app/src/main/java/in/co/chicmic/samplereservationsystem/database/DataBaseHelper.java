@@ -5,15 +5,18 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.BitmapFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import in.co.chicmic.samplereservationsystem.R;
 import in.co.chicmic.samplereservationsystem.dataModels.User;
 import in.co.chicmic.samplereservationsystem.utilities.AppConstants;
 import in.co.chicmic.samplereservationsystem.utilities.DBBitmapUtilities;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
+    private Context mContext;
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
@@ -31,12 +34,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_SECURITY_HINT = "security_hint";
     private static final String COLUMN_IS_ADMIN = "is_admin";
     private static final String COLUMN_PROFILE_IMAGE = "profile_image";
+    private static final String COLUMN_USER_CONTACT = "user_contact";
+    private static final String COLUMN_USER_GENDER = "user_gender";
+    private static final String COLUMN_USER_STATUS = "user_status"; //0 = not approved, 1 = approved, 2 = blocked;
 
     // create table sql query
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_NAME + " TEXT,"
             + COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_SECURITY_HINT
-            + " TEXT," + COLUMN_IS_ADMIN + " INTEGER," + COLUMN_PROFILE_IMAGE + " BLOB" +")";
+            + " TEXT," + COLUMN_IS_ADMIN + " INTEGER," + COLUMN_PROFILE_IMAGE + " BLOB,"
+            + COLUMN_USER_CONTACT + " TEXT, " + COLUMN_USER_GENDER + " TEXT," + COLUMN_USER_STATUS
+            + " INTEGER"+ ")";
 
     // drop table sql query
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
@@ -48,11 +56,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public DataBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
+        addAdmin(db);
     }
 
 
@@ -65,6 +75,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // Create tables again
         onCreate(db);
 
+    }
+
+    private void addAdmin(SQLiteDatabase db){
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_NAME, "sonu");
+        values.put(COLUMN_USER_EMAIL, "sonu@android.com");
+        values.put(COLUMN_USER_PASSWORD, "sonutjtj");
+        values.put(COLUMN_SECURITY_HINT, "sonutj");
+        values.put(COLUMN_PROFILE_IMAGE
+                , DBBitmapUtilities.getBytes(BitmapFactory
+                        .decodeResource(mContext.getResources(), R.drawable.admin)));
+        values.put(COLUMN_IS_ADMIN, AppConstants.sADMIN);
+        values.put(COLUMN_USER_CONTACT, "123456789");
+        values.put(COLUMN_USER_GENDER, "Male");
+        values.put(COLUMN_USER_STATUS, 1);
+        // Inserting Row
+        db.insert(TABLE_USER, null, values);
     }
 
     /**
@@ -85,6 +112,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } else {
             values.put(COLUMN_IS_ADMIN, AppConstants.sNOT_ADMIN);
         }
+        values.put(COLUMN_USER_CONTACT, user.getContact().trim());
+        values.put(COLUMN_USER_GENDER, user.getGender());
+        values.put(COLUMN_USER_STATUS, user.getIsApproved());
 
         // Inserting Row
         db.insert(TABLE_USER, null, values);
@@ -105,7 +135,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 COLUMN_USER_PASSWORD,
                 COLUMN_SECURITY_HINT,
                 COLUMN_IS_ADMIN,
-                COLUMN_PROFILE_IMAGE
+                COLUMN_PROFILE_IMAGE,
+                COLUMN_USER_CONTACT,
+                COLUMN_USER_GENDER,
+                COLUMN_USER_STATUS
         };
         // sorting orders
         String sortOrder =
@@ -141,6 +174,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 user.setIsAdmin((cursor.getInt(cursor.getColumnIndex(COLUMN_IS_ADMIN))) == 1);
                 user.setProfileImage(DBBitmapUtilities.getImage(cursor
                         .getBlob(cursor.getColumnIndex(COLUMN_PROFILE_IMAGE))));
+                user.setContact(cursor.getString(cursor.getColumnIndex(COLUMN_USER_CONTACT)));
+                user.setGender(cursor.getString(cursor.getColumnIndex(COLUMN_USER_GENDER)));
+                user.setIsApproved(cursor.getInt(cursor.getColumnIndex(COLUMN_USER_STATUS)));
                 // Adding user record to list
                 userList.add(user);
             } while (cursor.moveToNext());
@@ -167,6 +203,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_SECURITY_HINT, user.getSecurityHint());
         values.put(COLUMN_IS_ADMIN, user.getIsAdmin() ? 1 : 0);
         values.put(COLUMN_PROFILE_IMAGE, DBBitmapUtilities.getBytes(user.getProfileImage()));
+        values.put(COLUMN_USER_CONTACT, user.getContact().trim());
+        values.put(COLUMN_USER_GENDER, user.getGender());
+        values.put(COLUMN_USER_STATUS, user.getIsApproved());
 
         // updating row
         db.update(TABLE_USER, values, COLUMN_USER_ID + " = ?",
@@ -279,15 +318,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         + " = '" + pEmail + "'"
                 , null);
         User user = new User();
-        if (c.moveToNext()) {
-            user.setName(c.getString(c.getColumnIndex(COLUMN_USER_NAME)));
-            user.setEmail(c.getString(c.getColumnIndex(COLUMN_USER_EMAIL)));
-            user.setPassword(c.getString(c.getColumnIndex(COLUMN_USER_PASSWORD)));
-            user.setSecurityHint(c.getString(c.getColumnIndex(COLUMN_SECURITY_HINT)));
-            user.setIsAdmin(Integer.parseInt(c.getString(c.getColumnIndex(COLUMN_USER_ID))) == 1);
-            user.setProfileImage(DBBitmapUtilities.getImage(c.getBlob(c.getColumnIndex(COLUMN_PROFILE_IMAGE))));
+        if(c!=null && c.getCount() > 0)
+        {
+            if (c.moveToFirst())
+            {
+                do {
+                    user.setName(c.getString(c.getColumnIndex(COLUMN_USER_NAME)));
+                    user.setEmail(c.getString(c.getColumnIndex(COLUMN_USER_EMAIL)));
+                    user.setPassword(c.getString(c.getColumnIndex(COLUMN_USER_PASSWORD)));
+                    user.setSecurityHint(c.getString(c.getColumnIndex(COLUMN_SECURITY_HINT)));
+                    user.setIsAdmin(Integer.parseInt(c.getString(c.getColumnIndex(COLUMN_USER_ID))) == 1);
+                    user.setProfileImage(DBBitmapUtilities.getImage(c.getBlob(c.getColumnIndex(COLUMN_PROFILE_IMAGE))));
+                    user.setContact(c.getString(c.getColumnIndex(COLUMN_USER_CONTACT)));
+                    user.setGender(c.getString(c.getColumnIndex(COLUMN_USER_GENDER)));
+                    user.setIsApproved(c.getInt(c.getColumnIndex(COLUMN_USER_STATUS)));
+                } while (c.moveToNext());
+            }
         }
-        c.close();
+        if (c != null) {
+            c.close();
+        }
         return user;
     }
 
@@ -305,5 +355,45 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         c.close();
         return str;
+    }
+
+    public boolean checkAdmin(String pEmail) {
+        // array of columns to fetch
+        String[] columns = {
+                COLUMN_IS_ADMIN
+        };
+        SQLiteDatabase db = this.getReadableDatabase();
+        // selection criteria
+        String selection = COLUMN_USER_EMAIL + " = ?";
+
+        // selection arguments
+        String[] selectionArgs = {pEmail};
+
+        // query user table with conditions
+        /**
+         * Here query function is used to fetch records from user
+         * table this function works like we use sql query.
+         * SQL query equivalent to this query function is
+         * SELECT user_id FROM user WHERE user_email =
+         * 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
+         */
+        Cursor cursor = db.query(TABLE_USER, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);                      //The sort order
+
+        if(cursor!=null && cursor.getCount() > 0)
+        {
+            if (cursor.moveToFirst())
+            {
+                return Integer.parseInt(cursor.getString(cursor.getColumnIndex(COLUMN_IS_ADMIN))) == 1;
+            }
+            cursor.close();
+        }
+        db.close();
+        return false;
     }
 }

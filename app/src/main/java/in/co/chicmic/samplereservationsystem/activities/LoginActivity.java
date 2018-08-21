@@ -10,7 +10,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -21,6 +20,7 @@ import android.widget.Toast;
 import in.co.chicmic.samplereservationsystem.R;
 import in.co.chicmic.samplereservationsystem.database.DataBaseHelper;
 import in.co.chicmic.samplereservationsystem.sessionManager.SessionManager;
+import in.co.chicmic.samplereservationsystem.utilities.AppConstants;
 import in.co.chicmic.samplereservationsystem.utilities.InputValidation;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -143,7 +143,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 , Toast.LENGTH_SHORT)
                                 .show();
                     }else{
-                        Log.d("GET PASSWORD",storedPassword);
                         getPass.setText(storedPassword);
                     }
                 }
@@ -176,21 +175,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (mDatabaseHelper.checkUser(mTextInputEditTextEmail.getText().toString().trim()
                 , mTextInputEditTextPassword.getText().toString().trim())) {
-
-
-            mSession.createLoginSession("Sonu", mTextInputEditTextEmail.getText().toString());
-            Intent accountsIntent = new Intent(mActivity
-                    , UsersMainActivity.class);
-            accountsIntent.putExtra("EMAIL", mTextInputEditTextEmail.getText().toString().trim());
-            emptyInputEditText();
-            startActivity(accountsIntent);
-
-
+            if (mDatabaseHelper.checkAdmin(mTextInputEditTextEmail.getText().toString().trim())){
+                mSession
+                        .createLoginSession(mTextInputEditTextEmail.getText().toString(), true);
+                Intent accountsIntent = new Intent(mActivity
+                        , AdminMainActivity.class);
+                accountsIntent.putExtra(AppConstants.sEMAIL, mTextInputEditTextEmail.getText().toString().trim());
+                emptyInputEditText();
+                startActivity(accountsIntent);
+            } else {
+                mSession
+                        .createLoginSession(mTextInputEditTextEmail.getText().toString(), false);
+                Intent accountsIntent = new Intent(mActivity
+                        , UsersMainActivity.class);
+                accountsIntent.putExtra(AppConstants.sEMAIL, mTextInputEditTextEmail.getText().toString().trim());
+                emptyInputEditText();
+                startActivity(accountsIntent);
+            }
         } else {
             // Snack Bar to show success message that record is wrong
             Snackbar.make(mNestedScrollView, getString(R.string.error_valid_email_password)
                     , Snackbar.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
     }
 
     /**
