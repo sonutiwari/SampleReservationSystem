@@ -1,8 +1,6 @@
 package in.co.chicmic.samplereservationsystem.fragments;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -71,12 +69,6 @@ public class BlockUserFragment extends Fragment implements BlockUserRecyclerClic
         getDataFromSQLite();
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -105,20 +97,8 @@ public class BlockUserFragment extends Fragment implements BlockUserRecyclerClic
     }
 
     private void getDataFromSQLite() {
-        // AsyncTask is used that SQLite operation not blocks the UI Thread.
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                mUsersList.clear();
-                mUsersList.addAll(mDataBaseHelper.getAllUser());
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                mAdapter.notifyDataSetChanged();
-            }
-        }.execute();
+        mUsersList.clear();
+        mUsersList.addAll(mDataBaseHelper.getAllUser());
+        mAdapter.notifyDataSetChanged();
     }
 }

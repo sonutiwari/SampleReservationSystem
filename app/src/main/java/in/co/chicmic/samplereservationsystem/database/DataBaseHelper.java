@@ -100,12 +100,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 UserTable.COLUMN_USER_NAME + " ASC";
         List<User> userList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(UserTable.TABLE_USER, //Table to query
-                mColumns,    //columns to return
-                null,        //columns for the WHERE clause
-                null,        //The values for the WHERE clause
-                null,       //group the rows
-                null,       //filter by row groups
+        Cursor cursor = db.query(UserTable.TABLE_USER,
+                mColumns,
+                null,
+                null,
+                null,
+                null,
                 sortOrder);
         if (cursor.moveToFirst()) {
             do {
