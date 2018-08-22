@@ -16,7 +16,7 @@ import in.co.chicmic.samplereservationsystem.listeners.BlockUserRecyclerClickLis
 import in.co.chicmic.samplereservationsystem.utilities.AppConstants;
 
 public class BlockUserRecyclerAdapter extends
-        RecyclerView.Adapter<BlockUserRecyclerAdapter.UserViewHolder>{
+        RecyclerView.Adapter<BlockUserRecyclerAdapter.UserViewHolder> {
     private List<User> mListUsers;
     private BlockUserRecyclerClickListener mListener;
     public BlockUserRecyclerAdapter(List<User> pListUsers
@@ -30,18 +30,28 @@ public class BlockUserRecyclerAdapter extends
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // inflating recycler item view
         View itemView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.approve_user_recycler_item, viewGroup, false);
+                .inflate(R.layout.block_user_recycler_item, viewGroup, false);
         return new UserViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final UserViewHolder userViewHolder, int position) {
         userViewHolder.mUserNameTV.setText(mListUsers.get(position).getName());
-        userViewHolder.mApproveButton.setText(AppConstants.sBLOCK);
+        if (mListUsers.get(position).getIsApproved() == AppConstants.sSTATUS_BLOCKED){
+            userViewHolder.mApproveButton.setText(AppConstants.sUNBLOCK);
+        } else {
+            userViewHolder.mApproveButton.setText(AppConstants.sBLOCK);
+        }
         userViewHolder.mApproveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.onBlockButtonClick(userViewHolder.getAdapterPosition());
+            }
+        });
+        userViewHolder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onDeleteButtonClick(userViewHolder.getAdapterPosition());
             }
         });
     }
@@ -54,10 +64,12 @@ public class BlockUserRecyclerAdapter extends
     class UserViewHolder extends RecyclerView.ViewHolder {
         TextView mUserNameTV;
         Button mApproveButton;
+        Button mDeleteButton;
         UserViewHolder(@NonNull View itemView) {
             super(itemView);
             mUserNameTV = itemView.findViewById(R.id.user_name);
-            mApproveButton = itemView.findViewById(R.id.approve_button);
+            mApproveButton = itemView.findViewById(R.id.block_button);
+            mDeleteButton = itemView.findViewById(R.id.delete_button);
         }
     }
 }

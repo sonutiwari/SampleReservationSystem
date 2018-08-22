@@ -1,7 +1,6 @@
 package in.co.chicmic.samplereservationsystem.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -21,16 +20,6 @@ import in.co.chicmic.samplereservationsystem.dataModels.User;
 import in.co.chicmic.samplereservationsystem.database.DataBaseHelper;
 import in.co.chicmic.samplereservationsystem.listeners.ApproveUserRecyclerClickListener;
 import in.co.chicmic.samplereservationsystem.listeners.ApproveUsersClickListener;
-
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ApproveUsersClickListener} interface
- * to handle interaction events.
- * Use the {@link ApproveUsersFragment} factory method to
- * create an instance of this fragment.
- */
 public class ApproveUsersFragment extends Fragment implements ApproveUserRecyclerClickListener{
 
     private ApproveUsersClickListener mListener;
@@ -69,12 +58,6 @@ public class ApproveUsersFragment extends Fragment implements ApproveUserRecycle
         getDataFromSQLite();
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
 
     @Override
     public void onAttach(Context context) {
@@ -82,8 +65,7 @@ public class ApproveUsersFragment extends Fragment implements ApproveUserRecycle
         if (context instanceof ApproveUsersClickListener) {
             mListener = (ApproveUsersClickListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString());
         }
     }
 

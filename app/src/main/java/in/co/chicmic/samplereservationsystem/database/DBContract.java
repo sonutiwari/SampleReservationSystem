@@ -2,7 +2,7 @@ package in.co.chicmic.samplereservationsystem.database;
 
 import android.provider.BaseColumns;
 
-public class DBContract {
+class DBContract {
     private DBContract(){}
 
     public static class UserTable implements BaseColumns{
@@ -30,5 +30,10 @@ public class DBContract {
 
         // drop table sql query
         public static String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
+    }
+
+    public static class TrainDetails implements BaseColumns{
+        public static final String TABLE_NAME = "train_details";
+
     }
 }

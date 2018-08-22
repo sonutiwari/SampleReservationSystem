@@ -1,3 +1,4 @@
 package in.co.chicmic.samplereservationsystem.listeners;
-public interface BlockUserFragmentListener {
+
+public interface AddTrainFragmentListener {
 }

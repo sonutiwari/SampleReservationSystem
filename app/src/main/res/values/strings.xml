@@ -82,4 +82,14 @@
     <string name="we_did_not_found_record">We didn\'t found any records with This email and security hint</string>
     <string name="invalid_email_login_hint">Please Enter Valid email</string>
     <string name="email_or_hint_empty">Email or hint can\'t be empty</string>
+    <string name="block">Block</string>
+    <string name="delete_user">Delete User</string>
+    <string name="delete_user_dialog_title">Delete user?</string>
+    <string name="delete_dialog_message">User will be removed from database.</string>
+    <string name="button_yes">Yes</string>
+    <string name="button_no">No</string>
+    <string name="blocked_string">Blocked</string>
+    <string name="unblocked_string">Unblocked</string>
+    <string name="can_not_block_admin">You can not block admin</string>
+    <string name="can_not_delete_admin">You can not delete admin</string>
 </resources>

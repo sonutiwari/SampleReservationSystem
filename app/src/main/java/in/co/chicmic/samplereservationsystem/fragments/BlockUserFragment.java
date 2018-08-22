@@ -1,6 +1,8 @@
 package in.co.chicmic.samplereservationsystem.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,7 @@ import in.co.chicmic.samplereservationsystem.dataModels.User;
 import in.co.chicmic.samplereservationsystem.database.DataBaseHelper;
 import in.co.chicmic.samplereservationsystem.listeners.BlockUserFragmentListener;
 import in.co.chicmic.samplereservationsystem.listeners.BlockUserRecyclerClickListener;
+import in.co.chicmic.samplereservationsystem.utilities.AppConstants;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,8 +78,7 @@ public class BlockUserFragment extends Fragment implements BlockUserRecyclerClic
         if (context instanceof BlockUserFragmentListener) {
             mListener = (BlockUserFragmentListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString());
         }
     }
 
@@ -89,12 +91,47 @@ public class BlockUserFragment extends Fragment implements BlockUserRecyclerClic
     @Override
     public void onBlockButtonClick(int position) {
         User user = mUsersList.get(position);
-        mUsersList.remove(position);
-        user.setIsApproved(2);
-        mDataBaseHelper.updateUserStatus(user);
-        mAdapter.notifyDataSetChanged();
-        Toast.makeText(getActivity(), "Blocked", Toast.LENGTH_SHORT).show();
+        if (mDataBaseHelper.checkAdmin(user.getEmail())){
+            Toast.makeText(getContext(), R.string.can_not_block_admin
+                    , Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (user.getIsApproved() == AppConstants.sSTATUS_APPROVED){
+            user.setIsApproved(AppConstants.sSTATUS_BLOCKED);
+            mDataBaseHelper.updateUserStatus(user);
+            Toast.makeText(getActivity(), R.string.blocked_string, Toast.LENGTH_SHORT).show();
+        } else {
+            user.setIsApproved(AppConstants.sSTATUS_APPROVED);
+            mDataBaseHelper.updateUserStatus(user);
+            Toast.makeText(getActivity(), R.string.unblocked_string, Toast.LENGTH_SHORT).show();
+        }
+        getDataFromSQLite();
     }
+
+    @Override
+    public void onDeleteButtonClick(final int pPosition) {
+        if (mDataBaseHelper.checkAdmin(mUsersList.get(pPosition).getEmail())){
+            Toast.makeText(getContext(), R.string.can_not_delete_admin
+                    , Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        dialog.setTitle(R.string.delete_user_dialog_title);
+        dialog.setMessage(R.string.delete_dialog_message);
+        dialog.setPositiveButton(R.string.button_yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mDataBaseHelper.deleteUser(mUsersList.get(pPosition));
+                getDataFromSQLite();
+            }
+        }).setNegativeButton(R.string.button_no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        dialog.show();
+    }
+
 
     private void getDataFromSQLite() {
         mUsersList.clear();

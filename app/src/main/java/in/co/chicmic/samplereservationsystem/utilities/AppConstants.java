@@ -7,10 +7,9 @@ public class AppConstants {
     public static final int sADMIN = 1;
     public static final int sCLICK_IMAGE = 1;
     public static final int sCHOOSE_IMAGE_FROM_GALLERY = 2;
-    public static int sSTATUS_NOT_APPROVED = 0;
-    public static int sSTATUS_APPROVED = 1;
-    public static int sSTATUS_BLOCKED = 2;
-    public static final int sMEDIA_TYPE_IMAGE = 1;
+    public static final int sSTATUS_NOT_APPROVED = 0;
+    public static final int sSTATUS_APPROVED = 1;
+    public static final int sSTATUS_BLOCKED = 2;
 
     // Strings
     public static final String sIMAGE_SELECT_OR_CLICK = "select_or_click";
@@ -20,5 +19,6 @@ public class AppConstants {
     public static final String sAPPROVE_USER_FRAGMENT = "approve_user_fragment";
     public static final String sBLOCK = "Block";
     public static final String sBLOCK_USER_FRAGMENT = "block_user";
-
+    public static final String sUNBLOCK = "Unblock";
+    public static final String sADD_TRAIN_TAG = "add_train";
 }

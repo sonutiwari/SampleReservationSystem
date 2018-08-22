@@ -141,7 +141,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    private void deleteUser(User user) {
+    public void deleteUser(User user) {
         // delete user record by id
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(UserTable.TABLE_USER, UserTable._ID + " = ?",
@@ -216,7 +216,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_EMAIL))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_PASSWORD))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_SECURITY_HINT))
-                        , (cursor.getInt(cursor.getColumnIndex(UserTable.COLUMN_IS_ADMIN))) == 1
+                        , Integer.parseInt(cursor.getString(cursor.getColumnIndex
+                                (UserTable.COLUMN_IS_ADMIN))) == 1
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_PROFILE_IMAGE))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_CONTACT))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_GENDER))

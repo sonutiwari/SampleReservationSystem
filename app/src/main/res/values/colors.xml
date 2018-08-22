@@ -2,10 +2,10 @@
 <resources>
     <color name="colorPrimary">#51d8c7</color>
     <color name="colorPrimaryDark">#51d8c7</color>
-    <color name="colorAccent">#FFFFFF</color>
+    <color name="colorAccent">#f20303</color>
     <color name="colorBackground">#413e4f</color>
-    <color name="colorText">#FFFFFF</color>
+    <color name="colorText">#1aa0de</color>
     <color name="colorTextHint">#51d8c7</color>
     <color name="button_green">#00ff00</color>
-    <color name="forget_password_bg">#D8D8D8</color>
+    <color name="forget_password_bg">#3760dc</color>
 </resources>
