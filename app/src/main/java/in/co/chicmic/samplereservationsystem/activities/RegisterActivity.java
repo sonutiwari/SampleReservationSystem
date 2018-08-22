@@ -1,25 +1,32 @@
 package in.co.chicmic.samplereservationsystem.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import in.co.chicmic.samplereservationsystem.R;
@@ -38,11 +45,6 @@ public class RegisterActivity extends AppCompatActivity
 
     private NestedScrollView mNestedScrollView;
 
-    private TextInputLayout mTextInputLayoutName;
-    private TextInputLayout mTextInputLayoutEmail;
-    private TextInputLayout mTextInputLayoutPassword;
-    private TextInputLayout mTextInputLayoutConfirmPassword;
-    private TextInputLayout mTextInputLayoutSecurityHint;
     private TextInputLayout mTILContact;
 
     private TextInputEditText mTextInputEditTextName;
@@ -62,7 +64,8 @@ public class RegisterActivity extends AppCompatActivity
     private InputValidation mInputValidation;
     private DataBaseHelper mDatabaseHelper;
     private User mUser;
-    private Bitmap mBitMap;
+    private Uri mImageUri;
+    String mImageFilePath;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,12 +81,6 @@ public class RegisterActivity extends AppCompatActivity
      */
     private void initViews() {
         mNestedScrollView = findViewById(R.id.nestedScrollView);
-
-        mTextInputLayoutName = findViewById(R.id.textInputLayoutName);
-        mTextInputLayoutEmail = findViewById(R.id.textInputLayoutEmail);
-        mTextInputLayoutPassword = findViewById(R.id.textInputLayoutPassword);
-        mTextInputLayoutConfirmPassword = findViewById(R.id.textInputLayoutConfirmPassword);
-        mTextInputLayoutSecurityHint = findViewById(R.id.til_security_hint);
         mTILContact = findViewById(R.id.textInputLayoutContact);
 
         mTextInputEditTextName = findViewById(R.id.textInputEditTextName);
@@ -145,41 +142,84 @@ public class RegisterActivity extends AppCompatActivity
      * This method is to validate the input text fields and post data to SQLite
      */
     private void postDataToSQLite() {
-        if (!mInputValidation.isInputEditTextFilled(mTextInputEditTextName
-                , mTextInputLayoutName, getString(R.string.error_message_name))) {
-            return;
-        }
-        if (!mInputValidation.isInputEditTextFilled(mTextInputEditTextEmail
-                , mTextInputLayoutEmail, getString(R.string.error_message_email))) {
-            return;
-        }
-        if (!mInputValidation.isInputEditTextEmail(mTextInputEditTextEmail
-                , mTextInputLayoutEmail, getString(R.string.error_message_email))) {
-            return;
-        }
-        if (!mInputValidation.isInputEditTextFilled(mTextInputEditTextPassword
-                , mTextInputLayoutPassword, getString(R.string.error_message_password))) {
-            return;
-        }
-        if (!mInputValidation.isInputEditTextMatches(mTextInputEditTextPassword
-                , mTextInputEditTextConfirmPassword,
-                mTextInputLayoutConfirmPassword, getString(R.string.error_password_match))) {
-            return;
-        }
-        if (!mInputValidation.isInputEditTextFilled(mTextInputEditTextSecurityHint
-                , mTextInputLayoutSecurityHint, getString(R.string.error_message_security_hint))) {
+        String email;
+        String name;
+        String password;
+        String hint;
+        String contact;
+        String confirmPassword;
+
+        if (mTextInputEditTextName.getText() != null) {
+            name = mTextInputEditTextName.getText().toString().trim();
+            if (name.length() < 3){
+                mTextInputEditTextName.setError(getString(R.string.error_invalid_name));
+                return;
+            }
+        } else {
+            mTextInputEditTextName.setError(getString(R.string.error_message_name));
             return;
         }
 
-        if (!mInputValidation.isInputEditTextFilled(mTIEContact
-                , mTILContact, getString(R.string.error_message_contact))) {
+        if (mTextInputEditTextEmail.getText() != null) {
+            email = mTextInputEditTextEmail.getText().toString().trim();
+            if (email.length() < 7){
+                mTextInputEditTextEmail.setError(getString(R.string.error_invalid_email));
+                return;
+            }
+        } else {
+            mTextInputEditTextEmail.setError(getString(R.string.error_message_email));
             return;
         }
+
+
+        if (mTextInputEditTextPassword.getText() != null) {
+            password = mTextInputEditTextPassword.getText().toString().trim();
+            if (password.length() < 5){
+                mTextInputEditTextPassword.setError(getString(R.string.error_invalid_password_5));
+                return;
+            }
+        } else {
+            mTextInputEditTextPassword.setError(getString(R.string.error_message_password));
+            return;
+        }
+
+        if (mTextInputEditTextSecurityHint.getText() != null) {
+            hint = mTextInputEditTextSecurityHint.getText().toString().trim();
+            if (hint.length() == 0){
+                mTextInputEditTextSecurityHint.setError(getString(R.string.error_message_security_hint));
+                return;
+            }
+        } else {
+            mTextInputEditTextSecurityHint.setError(getString(R.string.error_message_security_hint));
+            return;
+        }
+
+        if (mTIEContact.getText() != null) {
+            contact = mTIEContact.getText().toString().trim();
+            if (contact.length() < 10){
+                mTIEContact.setError(getString(R.string.error_message_contact_valid));
+                return;
+            }
+        } else {
+            mTIEContact.setError(getString(R.string.error_message_contact));
+            return;
+        }
+        if (mTextInputEditTextConfirmPassword.getText() != null) {
+            confirmPassword = mTextInputEditTextConfirmPassword.getText().toString().trim();
+            if (!confirmPassword.equals(password)){
+                mTextInputEditTextConfirmPassword.setError(getString(R.string.error_password_match));
+                return;
+            }
+        } else {
+            mTextInputEditTextConfirmPassword.setError(getString(R.string.error_message_email));
+            return;
+        }
+
         if (!mInputValidation.isContactValid(mTIEContact.getText().toString().trim())){
             mTILContact.setError("Please Enter Valid contact number");
             return;
         }
-        if (mBitMap == null){
+        if (mImageUri == null){
             Toast.makeText(this, "Please Select Image", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -189,14 +229,16 @@ public class RegisterActivity extends AppCompatActivity
             return;
         }
 
-        if (!mDatabaseHelper.checkUser(mTextInputEditTextEmail.getText().toString().trim())) {
-            mUser.setName(mTextInputEditTextName.getText().toString().trim());
-            mUser.setEmail(mTextInputEditTextEmail.getText().toString().trim());
-            mUser.setPassword(mTextInputEditTextPassword.getText().toString().trim());
-            mUser.setSecurityHint(mTextInputEditTextSecurityHint.getText().toString());
+        Toast.makeText(mActivity, "Registering Please wait...", Toast.LENGTH_SHORT).show();
+        emptyInputEditText();
+        if (!mDatabaseHelper.checkUser(email)) {
+            mUser.setName(name);
+            mUser.setEmail(email);
+            mUser.setPassword(password);
+            mUser.setSecurityHint(hint);
             mUser.setIsAdmin(false);
-            mUser.setProfileImage(mBitMap);
-            mUser.setContact(mTIEContact.getText().toString().trim());
+            mUser.setProfileImageURI(mImageUri.toString());
+            mUser.setContact(contact);
             mUser.setIsApproved(0);
             int id = mGenderRG.getCheckedRadioButtonId();
             if (id == R.id.gender_male){
@@ -204,23 +246,16 @@ public class RegisterActivity extends AppCompatActivity
             } else {
                 mUser.setGender("Female");
             }
-
             mDatabaseHelper.addUser(mUser);
-
             // Snack Bar to show success message that record saved successfully
             Snackbar.make(mNestedScrollView, getString(R.string.success_message)
                     , Snackbar.LENGTH_LONG).show();
-            emptyInputEditText();
-
             startActivity(new Intent(this, LoginActivity.class));
-
         } else {
             // Snack Bar to show error message that record already exists
             Snackbar.make(mNestedScrollView, getString(R.string.error_email_exists)
                     , Snackbar.LENGTH_LONG).show();
         }
-
-
     }
 
     /**
@@ -231,13 +266,30 @@ public class RegisterActivity extends AppCompatActivity
         mTextInputEditTextEmail.setText(null);
         mTextInputEditTextPassword.setText(null);
         mTextInputEditTextConfirmPassword.setText(null);
+        mTIEContact.setText(null);
+        mGenderRG.clearCheck();
+        mTextInputEditTextSecurityHint.setText(null);
     }
 
     @Override
     public void clickImageAndLoad() {
         mDialog.dismiss();
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(takePicture, AppConstants.sCLICK_IMAGE);
+        File photoFile = null;
+        try {
+            photoFile = createImageFile();
+        } catch (IOException ex) {
+            Log.e("Sonu", "clickImageAndLoad: " + ex);
+        }
+        if(photoFile != null) {
+            mImageUri = FileProvider.getUriForFile(this
+                    , "in.co.chicmic.samplereservationsystem.cameraImageProvider"
+                    , photoFile);
+            takePicture.putExtra(MediaStore.EXTRA_OUTPUT,
+                    mImageUri);
+            takePicture.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+            startActivityForResult(takePicture, AppConstants.sCLICK_IMAGE);
+        }
     }
 
     @Override
@@ -254,27 +306,37 @@ public class RegisterActivity extends AppCompatActivity
         switch (pRequestCode) {
             case AppConstants.sCLICK_IMAGE:
                 if (pResultCode == RESULT_OK) {
-                    Bundle extras = pImageReturnedIntent.getExtras();
-                    if (extras != null){
-                        mBitMap = (Bitmap) extras.get("data");
-                        mProfileImageView.setImageBitmap(mBitMap);
-                    }
-
+                    mProfileImageView.setImageURI(mImageUri);
                 }
                 break;
             case AppConstants.sCHOOSE_IMAGE_FROM_GALLERY:
                 if (pResultCode == RESULT_OK) {
-                    Uri pickedImage = pImageReturnedIntent.getData();
-                    try {
-                        mBitMap = MediaStore.Images.Media.getBitmap(this.getContentResolver()
-                                , pickedImage);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    mImageUri = pImageReturnedIntent.getData();
                     //use the bitmap as you like
-                    mProfileImageView.setImageBitmap(mBitMap);
+                    mProfileImageView.setImageURI(mImageUri);
+                    getContentResolver()
+                            .takePersistableUriPermission (mImageUri
+                                    , Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                            |Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 }
                 break;
         }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp =
+                new SimpleDateFormat("yyyyMMdd_HHmmss",
+                        Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir =
+                getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        mImageFilePath = image.getAbsolutePath();
+        return image;
     }
 }

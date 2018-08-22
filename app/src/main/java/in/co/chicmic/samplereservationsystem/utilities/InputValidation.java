@@ -9,9 +9,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class InputValidation {
     private Context context;
 
@@ -62,7 +59,7 @@ public class InputValidation {
             , String message)
     {
         String value = textInputEditText.getText().toString().trim();
-        if (value.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(value).matches()) {
+        if (value.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(value).matches()) {
             textInputLayout.setError(message);
             hideKeyboardFrom(textInputEditText);
             return false;

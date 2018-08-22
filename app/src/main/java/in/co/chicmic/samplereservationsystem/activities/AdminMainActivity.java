@@ -18,12 +18,17 @@ import android.view.MenuItem;
 
 import in.co.chicmic.samplereservationsystem.fragments.ApproveUsersFragment;
 import in.co.chicmic.samplereservationsystem.R;
+import in.co.chicmic.samplereservationsystem.fragments.BlockUserFragment;
 import in.co.chicmic.samplereservationsystem.listeners.ApproveUsersClickListener;
+import in.co.chicmic.samplereservationsystem.listeners.BlockUserFragmentListener;
 import in.co.chicmic.samplereservationsystem.sessionManager.SessionManager;
 import in.co.chicmic.samplereservationsystem.utilities.AppConstants;
 
 public class AdminMainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ApproveUsersClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener
+        , ApproveUsersClickListener
+        , BlockUserFragmentListener
+{
 
     private SessionManager mSessionManager;
 
@@ -101,7 +106,8 @@ public class AdminMainActivity extends AppCompatActivity
         } else if (id == R.id.nav_trains_menu) {
 
         } else if (id == R.id.nav_block_users) {
-
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame
+                    , new BlockUserFragment(), AppConstants.sBLOCK_USER_FRAGMENT).commit();
         } else if (id == R.id.nav_update_pnr_requests) {
 
         } else if (id == R.id.nav_edit_profile) {
@@ -117,6 +123,5 @@ public class AdminMainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-
     }
 }

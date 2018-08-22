@@ -1,7 +1,5 @@
 package in.co.chicmic.samplereservationsystem.dataModels;
 
-import android.graphics.Bitmap;
-
 public class User {
 
     private int mId;
@@ -10,7 +8,7 @@ public class User {
     private String mPassword;
     private String mSecurityHint;
     private boolean mIsAdmin;
-    private Bitmap mProfileImage;
+    private String mProfileImageURI;
     private String mContact;
     private String mGender;
     private int mIsApproved; // 0 = not approved, 1 = approved, 2 = blocked;
@@ -63,12 +61,12 @@ public class User {
         this.mIsAdmin = pIsAdmin;
     }
 
-    public Bitmap getProfileImage() {
-        return mProfileImage;
+    public String getProfileImageURI() {
+        return mProfileImageURI;
     }
 
-    public void setProfileImage(Bitmap mProfileImage) {
-        this.mProfileImage = mProfileImage;
+    public void setProfileImageURI(String mProfileImage) {
+        this.mProfileImageURI = mProfileImage;
     }
 
     public String getContact() {

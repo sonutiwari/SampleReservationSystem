@@ -118,33 +118,44 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         dialog.setContentView(R.layout.forget_password);
         dialog.show();
 
-        final EditText security= dialog.findViewById(R.id.security_hint_edit);
+        final EditText securityHintEditText= dialog.findViewById(R.id.security_hint_edit);
+        final EditText emailEditText = dialog.findViewById(R.id.email_hint_edit);
         final TextView getPass= dialog.findViewById(R.id.tv_cancel);
 
-        Button ok= dialog.findViewById(R.id.get_password_btn);
+        Button getPassword= dialog.findViewById(R.id.get_password_btn);
         Button cancel= dialog.findViewById(R.id.cancel_btn);
 
-        ok.setOnClickListener(new View.OnClickListener() {
+        getPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String userName=security.getText().toString();
-                if(userName.equals(""))
+                String securityHint=securityHintEditText.getText().toString().trim();
+                String emailHint = emailEditText.getText().toString().trim();
+                if (!emailHint.isEmpty() && !securityHint.isEmpty())
                 {
-                    Toast.makeText(getApplicationContext()
-                            , "Please enter your security hint", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    String storedPassword = mDatabaseHelper.getAllTags(userName);
-                    if(storedPassword==null)
-                    {
+                    if (android.util.Patterns.EMAIL_ADDRESS.matcher(emailHint).matches()){
+                        String storedPassword =
+                                mDatabaseHelper.getPasswordRemainder(securityHint, emailHint);
+                        if(storedPassword==null)
+                        {
+                            Toast.makeText(getApplicationContext()
+                                    , R.string.we_did_not_found_record
+                                    , Toast.LENGTH_SHORT)
+                                    .show();
+                        }else{
+                            getPass.setText(storedPassword);
+                        }
+                    } else {
                         Toast.makeText(getApplicationContext()
-                                , "Please enter correct security hint"
+                                , R.string.invalid_email_login_hint
                                 , Toast.LENGTH_SHORT)
                                 .show();
-                    }else{
-                        getPass.setText(storedPassword);
                     }
+
+                } else {
+                    Toast.makeText(getApplicationContext()
+                            , R.string.email_or_hint_empty
+                            , Toast.LENGTH_SHORT)
+                            .show();
                 }
             }
         });
@@ -175,6 +186,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (mDatabaseHelper.checkUser(mTextInputEditTextEmail.getText().toString().trim()
                 , mTextInputEditTextPassword.getText().toString().trim())) {
+
             if (mDatabaseHelper.checkAdmin(mTextInputEditTextEmail.getText().toString().trim())){
                 mSession
                         .createLoginSession(mTextInputEditTextEmail.getText().toString(), true);
@@ -184,13 +196,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 emptyInputEditText();
                 startActivity(accountsIntent);
             } else {
-                mSession
-                        .createLoginSession(mTextInputEditTextEmail.getText().toString(), false);
-                Intent accountsIntent = new Intent(mActivity
-                        , UsersMainActivity.class);
-                accountsIntent.putExtra(AppConstants.sEMAIL, mTextInputEditTextEmail.getText().toString().trim());
-                emptyInputEditText();
-                startActivity(accountsIntent);
+                if (mDatabaseHelper.getUserDetails(mTextInputEditTextEmail.getText().toString().trim()).getIsApproved() == 1){
+                    mSession
+                            .createLoginSession(mTextInputEditTextEmail.getText().toString(), false);
+                    Intent accountsIntent = new Intent(mActivity
+                            , UsersMainActivity.class);
+                    accountsIntent.putExtra(AppConstants.sEMAIL, mTextInputEditTextEmail.getText().toString().trim());
+                    emptyInputEditText();
+                    startActivity(accountsIntent);
+                } else if (mDatabaseHelper.getUserDetails(mTextInputEditTextEmail.getText().toString().trim()).getIsApproved() == 2){
+                    Toast.makeText(this, R.string.blocked_id_message, Toast.LENGTH_SHORT).show();
+                } else {
+                    // Snack Bar to show success message that record is wrong
+                    Toast.makeText(this, R.string.yet_to_approve_string, Toast.LENGTH_SHORT).show();
+                }
             }
         } else {
             // Snack Bar to show success message that record is wrong

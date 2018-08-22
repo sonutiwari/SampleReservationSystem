@@ -1,6 +1,9 @@
 package in.co.chicmic.samplereservationsystem.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -11,10 +14,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import in.co.chicmic.samplereservationsystem.R;
@@ -58,8 +66,21 @@ public class UsersMainActivity extends AppCompatActivity
        User user = mDataBaseHelper.getUserDetails(mSessionManager
                                .getUserDetails().get(SessionManager.KEY_EMAIL).trim());
        mUserEmailTV.setText(user.getEmail());
-       mUserNameTV.setText(user.getName() + "       " + user.getGender());
-       mProfileImageView.setImageBitmap(user.getProfileImage());
+       mUserNameTV.setText(user.getName());
+       if (user.getProfileImageURI() != null) {
+           Log.e("Sonu", "setUserProfile: " + user.getProfileImageURI());
+           InputStream is = null;
+           try {
+               is = getContentResolver().openInputStream(Uri.parse(user.getProfileImageURI()));
+               Bitmap bitmap = BitmapFactory.decodeStream(is);
+               mProfileImageView.setImageBitmap(bitmap);
+               if (is != null) {
+                   is.close();
+               }
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+       }
     }
 
     private void setDrawer() {

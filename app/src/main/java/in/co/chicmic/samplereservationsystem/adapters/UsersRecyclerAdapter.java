@@ -1,5 +1,6 @@
 package in.co.chicmic.samplereservationsystem.adapters;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
@@ -40,7 +41,7 @@ public class UsersRecyclerAdapter extends RecyclerView.Adapter<UsersRecyclerAdap
         holder.mTextViewPassword.setText(mListUsers.get(position).getPassword());
         holder.mTextViewSecurityHint.setText(mListUsers.get(position).getSecurityHint());
         holder.mTextViewAdmin.setText(mListUsers.get(position).getIsAdmin() ? "Yes" : "No");
-        holder.mProfileImageView.setImageBitmap(mListUsers.get(position).getProfileImage());
+        holder.mProfileImageView.setImageURI(Uri.parse(mListUsers.get(position).getProfileImageURI()));
     }
 
     @Override

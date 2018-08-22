@@ -71,4 +71,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="approve">Approve</string>
+    <string name="yet_to_approve_string">Your Id is yet to be approved by admin, please wait for sometime and try again</string>
+    <string name="blocked_message">Admin Has blocked you</string>
+    <string name="error_invalid_name">Please Enter valid name</string>
+    <string name="error_invalid_password_5">Your password should be atleast 5 characters</string>
+    <string name="error_message_contact_valid">Mobile number should be 10 digits number</string>
+    <string name="blocked_id_message">This Id is blocked!</string>
+    <string name="enter_your_email">Enter Your Email</string>
+    <string name="we_did_not_found_record">We didn\'t found any records with This email and security hint</string>
+    <string name="invalid_email_login_hint">Please Enter Valid email</string>
+    <string name="email_or_hint_empty">Email or hint can\'t be empty</string>
 </resources>

@@ -2,6 +2,7 @@ package in.co.chicmic.samplereservationsystem.fragments;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -11,37 +12,38 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import in.co.chicmic.samplereservationsystem.R;
-import in.co.chicmic.samplereservationsystem.adapters.ApproveUsersRecyclerAdapter;
+import in.co.chicmic.samplereservationsystem.adapters.BlockUserRecyclerAdapter;
 import in.co.chicmic.samplereservationsystem.dataModels.User;
 import in.co.chicmic.samplereservationsystem.database.DataBaseHelper;
-import in.co.chicmic.samplereservationsystem.listeners.ApproveUserRecyclerClickListener;
-import in.co.chicmic.samplereservationsystem.listeners.ApproveUsersClickListener;
-
+import in.co.chicmic.samplereservationsystem.listeners.BlockUserFragmentListener;
+import in.co.chicmic.samplereservationsystem.listeners.BlockUserRecyclerClickListener;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ApproveUsersClickListener} interface
+ * {@link BlockUserFragment} interface
  * to handle interaction events.
- * Use the {@link ApproveUsersFragment} factory method to
+ * Use the {@link BlockUserFragment} factory method to
  * create an instance of this fragment.
  */
-public class ApproveUsersFragment extends Fragment implements ApproveUserRecyclerClickListener{
+public class BlockUserFragment extends Fragment implements BlockUserRecyclerClickListener{
 
-    private ApproveUsersClickListener mListener;
+    private BlockUserFragmentListener mListener;
     private List<User> mUsersList = new ArrayList<>();
-    private ApproveUsersRecyclerAdapter mAdapter;
     private RecyclerView mRecyclerView;
+    private BlockUserRecyclerAdapter mAdapter;
     private DataBaseHelper mDataBaseHelper;
 
-    public ApproveUsersFragment() {
+    public BlockUserFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,14 +54,14 @@ public class ApproveUsersFragment extends Fragment implements ApproveUserRecycle
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_approve_users, container, false);
+        View view = inflater.inflate(R.layout.fragment_block_user, container, false);
         mRecyclerView = view.findViewById(R.id.block_user_recycler);
         setUpRecycler();
         return view;
     }
 
     private void setUpRecycler() {
-        mAdapter = new ApproveUsersRecyclerAdapter(mUsersList, this);
+        mAdapter = new BlockUserRecyclerAdapter(mUsersList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -75,12 +77,11 @@ public class ApproveUsersFragment extends Fragment implements ApproveUserRecycle
         }
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof ApproveUsersClickListener) {
-            mListener = (ApproveUsersClickListener) context;
+        if (context instanceof BlockUserFragmentListener) {
+            mListener = (BlockUserFragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -93,18 +94,31 @@ public class ApproveUsersFragment extends Fragment implements ApproveUserRecycle
         mListener = null;
     }
 
-    private void getDataFromSQLite() {
-        mUsersList.clear();
-        mUsersList.addAll(mDataBaseHelper.getAllUnApprovedUsers());
-        mAdapter.notifyDataSetChanged();
-    }
-
     @Override
-    public void onApproveButtonClick(int position) {
+    public void onBlockButtonClick(int position) {
         User user = mUsersList.get(position);
         mUsersList.remove(position);
-        user.setIsApproved(1);
+        user.setIsApproved(2);
         mDataBaseHelper.updateUserStatus(user);
         mAdapter.notifyDataSetChanged();
+        Toast.makeText(getActivity(), "Blocked", Toast.LENGTH_SHORT).show();
+    }
+
+    private void getDataFromSQLite() {
+        // AsyncTask is used that SQLite operation not blocks the UI Thread.
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                mUsersList.clear();
+                mUsersList.addAll(mDataBaseHelper.getAllUser());
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                mAdapter.notifyDataSetChanged();
+            }
+        }.execute();
     }
 }
