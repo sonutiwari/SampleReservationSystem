@@ -43,7 +43,8 @@
         <activity
             android:name=".activities.AdminMainActivity"
             android:label="@string/title_activity_admin_main"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="in.co.chicmic.samplereservationsystem.cameraImageProvider"
@@ -51,8 +52,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
+
+        <activity android:name=".activities.UpdateTrainDetailsActivity"></activity>
     </application>
 
 </manifest>

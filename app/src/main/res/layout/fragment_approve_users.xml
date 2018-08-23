@@ -10,5 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/block_user_recycler"/>
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:text="@string/no_users_to_approve_here"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_24"
+        android:textStyle="bold"
+        android:id="@+id/tv_no_user"/>
 </FrameLayout>

@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,8 @@ import in.co.chicmic.samplereservationsystem.dataModels.User;
 import in.co.chicmic.samplereservationsystem.database.DataBaseHelper;
 import in.co.chicmic.samplereservationsystem.listeners.ApproveUserRecyclerClickListener;
 import in.co.chicmic.samplereservationsystem.listeners.ApproveUsersClickListener;
+import in.co.chicmic.samplereservationsystem.utilities.AppConstants;
+
 public class ApproveUsersFragment extends Fragment implements ApproveUserRecyclerClickListener{
 
     private ApproveUsersClickListener mListener;
@@ -27,6 +30,7 @@ public class ApproveUsersFragment extends Fragment implements ApproveUserRecycle
     private ApproveUsersRecyclerAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private DataBaseHelper mDataBaseHelper;
+    private TextView mNoUserTextView;
 
     public ApproveUsersFragment() {
         // Required empty public constructor
@@ -42,6 +46,7 @@ public class ApproveUsersFragment extends Fragment implements ApproveUserRecycle
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_approve_users, container, false);
+        mNoUserTextView = view.findViewById(R.id.tv_no_user);
         mRecyclerView = view.findViewById(R.id.block_user_recycler);
         setUpRecycler();
         return view;
@@ -79,13 +84,17 @@ public class ApproveUsersFragment extends Fragment implements ApproveUserRecycle
         mUsersList.clear();
         mUsersList.addAll(mDataBaseHelper.getAllUnApprovedUsers());
         mAdapter.notifyDataSetChanged();
+        if (mUsersList.size() == 0){
+            mRecyclerView.setVisibility(View.GONE);
+            mNoUserTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onApproveButtonClick(int position) {
         User user = mUsersList.get(position);
         mUsersList.remove(position);
-        user.setIsApproved(1);
+        user.setIsApproved(AppConstants.sSTATUS_APPROVED);
         mDataBaseHelper.updateUserStatus(user);
         mAdapter.notifyDataSetChanged();
     }

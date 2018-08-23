@@ -15,12 +15,15 @@ import android.view.MenuItem;
 import android.view.View;
 
 import in.co.chicmic.samplereservationsystem.R;
+import in.co.chicmic.samplereservationsystem.dataModels.TrainModel;
 import in.co.chicmic.samplereservationsystem.fragments.AddTrainFragment;
 import in.co.chicmic.samplereservationsystem.fragments.ApproveUsersFragment;
 import in.co.chicmic.samplereservationsystem.fragments.BlockUserFragment;
+import in.co.chicmic.samplereservationsystem.fragments.UpdateDeleteTrainsFragment;
 import in.co.chicmic.samplereservationsystem.listeners.AddTrainFragmentListener;
 import in.co.chicmic.samplereservationsystem.listeners.ApproveUsersClickListener;
 import in.co.chicmic.samplereservationsystem.listeners.BlockUserFragmentListener;
+import in.co.chicmic.samplereservationsystem.listeners.UpdateDeleteTrainListener;
 import in.co.chicmic.samplereservationsystem.sessionManager.SessionManager;
 import in.co.chicmic.samplereservationsystem.utilities.AppConstants;
 
@@ -29,6 +32,7 @@ public class AdminMainActivity extends AppCompatActivity
         , ApproveUsersClickListener
         , BlockUserFragmentListener
         , AddTrainFragmentListener
+        , UpdateDeleteTrainListener
         , View.OnClickListener
 {
 
@@ -97,10 +101,12 @@ public class AdminMainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_approve_new_users) {
-            getSupportFragmentManager().beginTransaction().add(R.id.frame
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame
                     , new ApproveUsersFragment(), AppConstants.sAPPROVE_USER_FRAGMENT).commit();
         } else if (id == R.id.nav_trains_menu) {
-
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame
+                    , new UpdateDeleteTrainsFragment()
+                    , AppConstants.sUPDATE_DELETE_TRAINS_FRAGMENT).commit();
         } else if (id == R.id.nav_block_users) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame
                     , new BlockUserFragment(), AppConstants.sBLOCK_USER_FRAGMENT).commit();
@@ -116,7 +122,6 @@ public class AdminMainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -125,5 +130,14 @@ public class AdminMainActivity extends AppCompatActivity
                         , new AddTrainFragment(), AppConstants.sADD_TRAIN_TAG).commit();
                 break;
         }
+    }
+
+    @Override
+    public void startUpdateTrainDetailsActivity(TrainModel trainModel) {
+        Intent intent = new Intent(this, UpdateTrainDetailsActivity.class);
+        intent.putExtra(AppConstants.sTRAIN_ID, trainModel.getTrainId());
+        intent.putExtra(AppConstants.sTRAIN_NAME, trainModel.getTrainName());
+        intent.putExtra(AppConstants.sTRAIN_NO_OF_SEATS, trainModel.getNoOfSeats());
+        startActivity(intent);
     }
 }

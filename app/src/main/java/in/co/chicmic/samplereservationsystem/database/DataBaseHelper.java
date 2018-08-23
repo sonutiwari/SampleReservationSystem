@@ -11,6 +11,8 @@ import java.util.List;
 
 import in.co.chicmic.samplereservationsystem.dataModels.User;
 import in.co.chicmic.samplereservationsystem.database.DBContract.UserTable;
+import in.co.chicmic.samplereservationsystem.database.DBContract.TrainDetails;
+import in.co.chicmic.samplereservationsystem.database.DBContract.BookingDetails;
 import in.co.chicmic.samplereservationsystem.utilities.AppConstants;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
@@ -42,6 +44,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(UserTable.CREATE_USER_TABLE);
+        db.execSQL(TrainDetails.CREATE_TRAIN_TABLE);
+        db.execSQL(BookingDetails.CREATE_BOOKING_TABLE);
         addAdmin(db);
     }
 
@@ -49,6 +53,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(UserTable.DROP_USER_TABLE);
+        db.execSQL(TrainDetails.DROP_TRAIN_TABLE);
+        db.execSQL(BookingDetails.DROP_BOOKING_TABLE);
         onCreate(db);
     }
 
@@ -90,11 +96,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    /**
-     * This method is to fetch all user and return the list of user records
-     *
-     * @return list
-     */
+
     public List<User> getAllUser() {
         String sortOrder =
                 UserTable.COLUMN_USER_NAME + " ASC";
@@ -116,7 +118,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_EMAIL))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_PASSWORD))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_SECURITY_HINT))
-                        , (cursor.getInt(cursor.getColumnIndex(UserTable.COLUMN_IS_ADMIN))) == 1
+                        , (cursor.getInt(cursor.getColumnIndex(UserTable.COLUMN_IS_ADMIN))) == AppConstants.sADMIN
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_PROFILE_IMAGE))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_CONTACT))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_GENDER))
@@ -217,7 +219,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_PASSWORD))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_SECURITY_HINT))
                         , Integer.parseInt(cursor.getString(cursor.getColumnIndex
-                                (UserTable.COLUMN_IS_ADMIN))) == 1
+                                (UserTable.COLUMN_IS_ADMIN))) == AppConstants.sADMIN
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_PROFILE_IMAGE))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_CONTACT))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_GENDER))
@@ -271,7 +273,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (cursor != null && cursor.getCount() > 0) {
             if (cursor.moveToFirst()) {
                 return Integer.parseInt(cursor
-                        .getString(cursor.getColumnIndex(UserTable.COLUMN_IS_ADMIN))) == 1;
+                        .getString(cursor.getColumnIndex(UserTable.COLUMN_IS_ADMIN))) ==
+                        AppConstants.sADMIN;
             }
             cursor.close();
         }
@@ -305,7 +308,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_EMAIL))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_PASSWORD))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_SECURITY_HINT))
-                        , (cursor.getInt(cursor.getColumnIndex(UserTable.COLUMN_IS_ADMIN))) == 1
+                        , (cursor.getInt(cursor.getColumnIndex(UserTable.COLUMN_IS_ADMIN))) == AppConstants.sADMIN
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_PROFILE_IMAGE))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_CONTACT))
                         , cursor.getString(cursor.getColumnIndex(UserTable.COLUMN_USER_GENDER))

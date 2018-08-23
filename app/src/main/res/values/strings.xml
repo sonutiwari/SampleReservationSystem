@@ -92,4 +92,20 @@
     <string name="unblocked_string">Unblocked</string>
     <string name="can_not_block_admin">You can not block admin</string>
     <string name="can_not_delete_admin">You can not delete admin</string>
+    <string name="please_enter_train_number">Please Enter Train Number</string>
+    <string name="please_enter_train_name">Please Enter train Name</string>
+    <string name="add_train">Add Train</string>
+    <string name="please_enter_no_of_seats">Please Enter No of seats</string>
+    <string name="empty_layout">Empty Layout</string>
+    <string name="no_users_to_approve_here">No Users to approve here</string>
+    <string name="no_trains_added_yet">No trains added yet</string>
+    <string name="train_no">Train No</string>
+    <string name="train_name">Train Name</string>
+    <string name="no_of_seats">No of Seats</string>
+    <string name="update_train_details">Update Train Details</string>
+    <string name="delete_this_train">Delete This Train</string>
+    <string name="ask_delete_this_train">Delete This train</string>
+    <string name="delete_train_message">This action will delete train from database</string>
+    <string name="number_of_booked_seats">Number of Booked seats</string>
+    <string name="user_booking_history">User Booking History</string>
 </resources>
