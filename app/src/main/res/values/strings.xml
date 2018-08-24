@@ -108,7 +108,7 @@
     <string name="delete_train_message">This action will delete train from database</string>
     <string name="number_of_booked_seats">Number of Booked seats</string>
     <string name="user_booking_history">User Booking History</string>
-    <string name="select_date">Select Date</string>
+    <string name="select_date">Click here and select Date</string>
     <string name="enter_number_of_seats">Enter Number of Seats</string>
     <string name="book_seats">Book Seats</string>
     <string name="no_of_seats_available">seats Available</string>

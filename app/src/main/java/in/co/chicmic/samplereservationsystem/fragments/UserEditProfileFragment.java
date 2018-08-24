@@ -275,6 +275,7 @@ public class UserEditProfileFragment extends Fragment implements View.OnClickLis
                 mUser.setGender(AppConstants.sFEMALE);
             }
             mDataBaseHelper.updateUserProfile(mUser);
+            mListener.updateProfile();
             Toast.makeText(getActivity(), R.string.success, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getActivity(), R.string.failed, Toast.LENGTH_SHORT).show();
