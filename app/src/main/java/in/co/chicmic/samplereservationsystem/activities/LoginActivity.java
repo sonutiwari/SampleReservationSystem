@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         final EditText securityHintEditText= dialog.findViewById(R.id.security_hint_edit);
         final EditText emailEditText = dialog.findViewById(R.id.email_hint_edit);
-        final TextView getPass= dialog.findViewById(R.id.tv_cancel);
+        final TextView getPass= dialog.findViewById(R.id.tv_password);
 
         Button getPassword= dialog.findViewById(R.id.get_password_btn);
         Button cancel= dialog.findViewById(R.id.cancel_btn);
@@ -142,6 +142,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     , Toast.LENGTH_SHORT)
                                     .show();
                         }else{
+                            dialog.findViewById(R.id.tv_your_password).setVisibility(View.VISIBLE);
+                            getPass.setVisibility(View.VISIBLE);
                             getPass.setText(storedPassword);
                         }
                     } else {

@@ -7,5 +7,5 @@
     <color name="colorText">#1aa0de</color>
     <color name="colorTextHint">#51d8c7</color>
     <color name="button_green">#00ff00</color>
-    <color name="forget_password_bg">#3760dc</color>
+    <color name="forget_password_bg">#f0f2f5</color>
 </resources>

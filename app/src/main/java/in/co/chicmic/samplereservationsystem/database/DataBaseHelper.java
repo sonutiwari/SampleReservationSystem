@@ -96,6 +96,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateUserProfile(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = setUserDetailsToSendInDB(
+                user.getName().trim(), user.getEmail().trim(), user.getPassword().trim()
+                , user.getSecurityHint().trim(), AppConstants.sNOT_ADMIN,user.getProfileImageURI()
+                , user.getContact().trim(), user.getGender(), user.getIsApproved()
+        );
+        String where = UserTable._ID + "=?";
+        String[] whereArgs = {String.valueOf(user.getId())};
+        db.update(UserTable.TABLE_USER, values, where, whereArgs);
+        db.close();
+    }
+
 
     public List<User> getAllUser() {
         String sortOrder =

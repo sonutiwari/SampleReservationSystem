@@ -1,6 +1,8 @@
 package in.co.chicmic.samplereservationsystem.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -8,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,6 +24,8 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import in.co.chicmic.samplereservationsystem.R;
@@ -171,7 +177,7 @@ public class UsersMainActivity extends AppCompatActivity
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.frame, new UserEditProfileFragment()
-                            , AppConstants.sBOOK_TRAIN_FRAGMENT)
+                            , AppConstants.sEDIT_PROFILE_FRAGMENT)
                     .commit();
 
         } else if (id == R.id.nav_logout) {
@@ -195,5 +201,65 @@ public class UsersMainActivity extends AppCompatActivity
                 break;
         }
     }
+
+    protected void onActivityResult(int pRequestCode
+            , int pResultCode, Intent pImageReturnedIntent) {
+        super.onActivityResult(pRequestCode, pResultCode, pImageReturnedIntent);
+        android.support.v4.app.Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(AppConstants.sEDIT_PROFILE_FRAGMENT);
+        fragment.onActivityResult(pRequestCode, pResultCode, pImageReturnedIntent);
+    }
+
+
+
+    public static final int MULTIPLE_PERMISSIONS = 10; // code you want.
+
+    String[] permissions= new String[]{
+            Manifest.permission.GET_ACCOUNTS,
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+
+
+    private  boolean checkPermissions() {
+        int result;
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        for (String permission:permissions) {
+            result = ContextCompat.checkSelfPermission(this,permission);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(permission);
+            }
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this
+                    , listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()])
+                    ,MULTIPLE_PERMISSIONS );
+            return false;
+        }
+        return true;
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissionsList[]
+            , @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MULTIPLE_PERMISSIONS:{
+                if (grantResults.length > 0) {
+                    String permissionsDenied = "";
+                    for (String per : permissionsList) {
+                        if(grantResults[0] == PackageManager.PERMISSION_DENIED){
+                            permissionsDenied += "\n" + per;
+
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+
 }
 

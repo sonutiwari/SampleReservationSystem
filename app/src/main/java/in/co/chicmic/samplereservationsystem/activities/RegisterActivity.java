@@ -76,9 +76,6 @@ public class RegisterActivity extends AppCompatActivity
         initObjects();
     }
 
-    /**
-     * This method is to initialize views
-     */
     private void initViews() {
         mNestedScrollView = findViewById(R.id.nestedScrollView);
         mTILContact = findViewById(R.id.textInputLayoutContact);
@@ -216,20 +213,20 @@ public class RegisterActivity extends AppCompatActivity
         }
 
         if (!mInputValidation.isContactValid(mTIEContact.getText().toString().trim())){
-            mTILContact.setError("Please Enter Valid contact number");
+            mTILContact.setError(getString(R.string.valid_contact_error));
             return;
         }
         if (mImageUri == null){
-            Toast.makeText(this, "Please Select Image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.please_select_image, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (mGenderRG.getCheckedRadioButtonId() == -1){
-            Toast.makeText(this, "Please Select Gender", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.please_select_gender, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Toast.makeText(mActivity, "Registering Please wait...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mActivity, R.string.registering_please_wait, Toast.LENGTH_SHORT).show();
         emptyInputEditText();
         if (!mDatabaseHelper.checkUser(email)) {
             mUser.setName(name);
@@ -239,12 +236,12 @@ public class RegisterActivity extends AppCompatActivity
             mUser.setIsAdmin(false);
             mUser.setProfileImageURI(mImageUri.toString());
             mUser.setContact(contact);
-            mUser.setIsApproved(0);
+            mUser.setIsApproved(AppConstants.sSTATUS_NOT_APPROVED);
             int id = mGenderRG.getCheckedRadioButtonId();
             if (id == R.id.gender_male){
-                mUser.setGender("Male");
+                mUser.setGender(AppConstants.sMALE);
             } else {
-                mUser.setGender("Female");
+                mUser.setGender(AppConstants.sFEMALE);
             }
             mDatabaseHelper.addUser(mUser);
             // Snack Bar to show success message that record saved successfully
@@ -258,9 +255,7 @@ public class RegisterActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * This method is to empty all input edit text
-     */
+
     private void emptyInputEditText() {
         mTextInputEditTextName.setText(null);
         mTextInputEditTextEmail.setText(null);
@@ -283,7 +278,7 @@ public class RegisterActivity extends AppCompatActivity
         }
         if(photoFile != null) {
             mImageUri = FileProvider.getUriForFile(this
-                    , "in.co.chicmic.samplereservationsystem.cameraImageProvider"
+                    , AppConstants.sAUTHORITY
                     , photoFile);
             takePicture.putExtra(MediaStore.EXTRA_OUTPUT,
                     mImageUri);
@@ -295,7 +290,7 @@ public class RegisterActivity extends AppCompatActivity
     @Override
     public void loadImageFromGallery() {
         mDialog.dismiss();
-        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+        Intent pickPhoto = new Intent(Intent.ACTION_OPEN_DOCUMENT,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickPhoto, AppConstants.sCHOOSE_IMAGE_FROM_GALLERY);
     }
@@ -314,10 +309,6 @@ public class RegisterActivity extends AppCompatActivity
                     mImageUri = pImageReturnedIntent.getData();
                     //use the bitmap as you like
                     mProfileImageView.setImageURI(mImageUri);
-                    getContentResolver()
-                            .takePersistableUriPermission (mImageUri
-                                    , Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                            |Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 }
                 break;
         }
@@ -325,7 +316,7 @@ public class RegisterActivity extends AppCompatActivity
 
     private File createImageFile() throws IOException {
         String timeStamp =
-                new SimpleDateFormat("yyyyMMdd_HHmmss",
+                new SimpleDateFormat(AppConstants.sDATE_PATTERN,
                         Locale.getDefault()).format(new Date());
         String imageFileName = "IMG_" + timeStamp + "_";
         File storageDir =

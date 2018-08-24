@@ -95,7 +95,6 @@ public class AdminMainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -110,11 +109,7 @@ public class AdminMainActivity extends AppCompatActivity
         } else if (id == R.id.nav_block_users) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame
                     , new BlockUserFragment(), AppConstants.sBLOCK_USER_FRAGMENT).commit();
-        } else if (id == R.id.nav_update_pnr_requests) {
-
-        } else if (id == R.id.nav_edit_profile) {
-
-        } else if (id == R.id.nav_logout) {
+        }  else if (id == R.id.nav_logout) {
             mSessionManager.logoutUser();
         }
 

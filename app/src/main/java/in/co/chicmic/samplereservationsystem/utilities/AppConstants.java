@@ -28,4 +28,9 @@ public class AppConstants {
     public static final String sTRAIN_NO_OF_SEATS = "no_of_seats";
     public static final String sBOOK_TRAIN_FRAGMENT = "book_train_fragment";
     public static final String sDATE_FORMAT = "%d/%d/%d";
+    public static final String sMALE = "Male";
+    public static final String sFEMALE = "Female";
+    public static final String sAUTHORITY = "in.co.chicmic.samplereservationsystem.cameraImageProvider";
+    public static final String sDATE_PATTERN = "yyyyMMdd_HHmmss";
+    public static final String sEDIT_PROFILE_FRAGMENT = "edit_profile";
 }

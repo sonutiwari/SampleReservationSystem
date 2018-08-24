@@ -51,7 +51,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_subtitle">sonu@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_log_out">Log Out</string>
     <string name="gender_male">Male</string>
@@ -122,4 +122,12 @@
     <string name="date">Date</string>
     <string name="train">Train</string>
     <string name="seats">Seats</string>
+    <string name="valid_contact_error">Please Enter Valid contact number</string>
+    <string name="please_select_image">Please Select Image</string>
+    <string name="please_select_gender">Please Select Gender</string>
+    <string name="registering_please_wait">Registering Please wait…</string>
+    <string name="success">Success</string>
+    <string name="failed">Failed</string>
+    <string name="admin">Admin</string>
+    <string name="update">Update</string>
 </resources>
