@@ -51,16 +51,17 @@ class DBContract {
     public static class BookingDetails implements BaseColumns{
         public static final String TABLE_NAME = "booking";
         public static final String COLUMN_DATE = "date";
-        public static final String COLUMN_TRAIN_ID = TrainDetails._ID;
-        public static final String COLUMN_USER_ID = UserTable._ID;
+        public static final String COLUMN_TRAIN_ID = "train_id";
+        public static final String COLUMN_USER_ID = "user_id";
         public static final String COLUMN_NUMBER_OF_SEATS_BOOKED = "seats";
 
         // create table query.
         public static String CREATE_BOOKING_TABLE = "CREATE TABLE " + TABLE_NAME + "("
-                + _ID + " INTEGER PRIMARY KEY, " + COLUMN_DATE + " TEXT, "
+                + _ID + " INTEGER PRIMARY KEY, "
+                + COLUMN_DATE + " TEXT, "
                 + COLUMN_TRAIN_ID + " INTEGER, "
                 + COLUMN_USER_ID + " INTEGER, "
-                + COLUMN_NUMBER_OF_SEATS_BOOKED + "INTEGER" + ")";
+                + COLUMN_NUMBER_OF_SEATS_BOOKED + " INTEGER" + ")";
 
         // drop table query.
         public static String DROP_BOOKING_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;

@@ -10,7 +10,6 @@ import java.util.List;
 import in.co.chicmic.samplereservationsystem.dataModels.TrainModel;
 
 public class AdminDBTasks {
-
     private AdminDBTasks(){}
     private static String[] columns = {
             DBContract.TrainDetails._ID
@@ -36,7 +35,8 @@ public class AdminDBTasks {
             values.put(DBContract.TrainDetails.COLUMN_NUMBER_OF_SEATS, pTrainData.getNoOfSeats());
         }
         if (pTrainData.getNoOfBookedSeats() != 0){
-            values.put(DBContract.TrainDetails.COLUMN_NUMBER_OF_BOOKED_SEATS, pTrainData.getNoOfSeats());
+            values.put(DBContract.TrainDetails.COLUMN_NUMBER_OF_BOOKED_SEATS
+                    , pTrainData.getNoOfBookedSeats());
         }
         String where = DBContract.TrainDetails._ID + "=?";
         String[] selectionArgs = {String.valueOf(pTrainData.getTrainId())};

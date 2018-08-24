@@ -1,25 +1,25 @@
 package in.co.chicmic.samplereservationsystem.dataModels;
 
 public class BookingModel {
-    long mPNR;
-    long mDate;
-    int mTrainId;
-    int mUserId;
-    int mNoOfSeats;
+    private int mPNR;
+    private String mDate;
+    private int mTrainId;
+    private int mUserId;
+    private int mNoOfSeats;
 
     public long getPNR() {
         return mPNR;
     }
 
-    public void setPNR(long mPNR) {
+    public void setPNR(int mPNR) {
         this.mPNR = mPNR;
     }
 
-    public long getBookingDate() {
+    public String getBookingDate() {
         return mDate;
     }
 
-    public void setBookingDate(long mDate) {
+    public void setBookingDate(String mDate) {
         this.mDate = mDate;
     }
 

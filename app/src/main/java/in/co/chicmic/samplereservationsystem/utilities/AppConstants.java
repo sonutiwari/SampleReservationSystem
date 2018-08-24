@@ -27,4 +27,5 @@ public class AppConstants {
     public static final String sTRAIN_NAME = "train_name";
     public static final String sTRAIN_NO_OF_SEATS = "no_of_seats";
     public static final String sBOOK_TRAIN_FRAGMENT = "book_train_fragment";
+    public static final String sDATE_FORMAT = "%d/%d/%d";
 }

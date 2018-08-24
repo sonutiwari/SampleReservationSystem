@@ -108,4 +108,18 @@
     <string name="delete_train_message">This action will delete train from database</string>
     <string name="number_of_booked_seats">Number of Booked seats</string>
     <string name="user_booking_history">User Booking History</string>
+    <string name="select_date">Select Date</string>
+    <string name="enter_number_of_seats">Enter Number of Seats</string>
+    <string name="book_seats">Book Seats</string>
+    <string name="no_of_seats_available">seats Available</string>
+    <string name="select_journey_date">Select the journey date</string>
+    <string name="clicked_toast">Clicked</string>
+    <string name="please_enter_number_of_seats">Please Enter Number of seats</string>
+    <string name="please_enter_valid_number_of_seats">Please Enter Valid Number of seats</string>
+    <string name="please_select_train">Please select the train</string>
+    <string name="not_enough_seats">Not Enough Seats in this train</string>
+    <string name="pnr">PNR</string>
+    <string name="date">Date</string>
+    <string name="train">Train</string>
+    <string name="seats">Seats</string>
 </resources>
